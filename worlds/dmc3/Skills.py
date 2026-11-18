@@ -5,51 +5,51 @@ from .Items import ItemData
 weapon_skills: dict[str, ItemData] = {
     # Rebellion
     "Rebellion - Progressive Stinger": ItemData(  # Stinger Level 1
-        0x40, ItemClassification.useful, 2),
+        0x40, ItemClassification.progression, 2),
     # "Rebellion - Stinger Level 2": ItemData(
-    #     0x41, ItemClassification.useful),
+    #     0x41, ItemClassification.progression),
     "Rebellion - Drive": ItemData(
-        0x42, ItemClassification.useful),
+        0x42, ItemClassification.progression),
     "Rebellion - Air Hike": ItemData(
         0x43, ItemClassification.progression),
 
     # Cerberus (Why does Cerberus only have two purchasable skills?)
     "Cerberus - Revolver Level 2": ItemData(
-        0x44, ItemClassification.useful),
+        0x44, ItemClassification.progression),
     "Cerberus - Windmill": ItemData(
-        0x45, ItemClassification.useful),
+        0x45, ItemClassification.progression),
 
     # Agni and Rudra
     "Agni and Rudra - Progressive Jet Stream": ItemData(  # Jet Stream Level 2
-        0x46, ItemClassification.useful, 2),
+        0x46, ItemClassification.progression, 2),
     # "Agni and Rudra - Jet Stream Level 3": ItemData(
-    #     0x47, ItemClassification.useful),
+    #     0x47, ItemClassification.progression),
     "Agni and Rudra - Whirlwind": ItemData(
-        0x48, ItemClassification.useful),
+        0x48, ItemClassification.progression),
     "Agni and Rudra - Air Hike": ItemData(
         0x49, ItemClassification.progression),
 
     # Nevan
     "Nevan - Progressive Reverb Shock": ItemData(
-        0x4A, ItemClassification.useful, 2),
+        0x4A, ItemClassification.progression, 2),
     # "Nevan - Reverb Shock Level 2": ItemData(
-    #     0x4B, ItemClassification.useful),
+    #     0x4B, ItemClassification.progression),
     "Nevan - Bat Rift Level 2": ItemData(
-        0x4C, ItemClassification.useful),
+        0x4C, ItemClassification.progression),
     "Nevan - Air Raid": ItemData(  # Needed for SM6
         0x4D, ItemClassification.progression),
     "Nevan - Volume Up": ItemData(
-        0x4E, ItemClassification.useful
+        0x4E, ItemClassification.progression
     ),
 
     # Beowulf
     "Beowulf - Straight Level 2": ItemData(
-        0x4F, ItemClassification.useful),
+        0x4F, ItemClassification.progression),
     # Progression
     "Beowulf - Progressive Uppercut": ItemData( # Beowulf - Beast Uppercut
-        0x50, ItemClassification.useful, 2),
+        0x50, ItemClassification.progression, 2),
     # "Beowulf - Rising Dragon": ItemData(
-    #     0x51, ItemClassification.useful),
+    #     0x51, ItemClassification.progression),
     "Beowulf - Air Hike": ItemData(
         0x52, ItemClassification.progression),
 }
@@ -64,9 +64,9 @@ gun_levels = {
 
 styles = {
     "Progressive Trickster": ItemData(0x60, ItemClassification.progression),
-    "Progressive Swordmaster": ItemData(0x61, ItemClassification.useful),
-    "Progressive Gunslinger": ItemData(0x62, ItemClassification.useful),
-    "Progressive Royalguard": ItemData(0x63, ItemClassification.useful),
+    "Progressive Swordmaster": ItemData(0x61, ItemClassification.progression),
+    "Progressive Gunslinger": ItemData(0x62, ItemClassification.progression),
+    "Progressive Royalguard": ItemData(0x63, ItemClassification.progression),
 }
 
 combined_upgrades = weapon_skills | gun_levels

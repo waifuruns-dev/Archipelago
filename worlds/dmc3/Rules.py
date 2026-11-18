@@ -27,10 +27,36 @@ def has_air_raid(state, world) -> bool:
 
 def has_sky_star(state, world) -> bool:
     # Lv2 Trickster gives Sky Star, if randomized styles is off, player will have to level Trickster
+    return has_style(state, world, "Trickster", 2)
+
+
+def has_style(state, world, style: str, level: int = 1) -> bool:
+    # With styles not randomized, every style is available (and can be leveled) from the start
     if world.options.randomize_styles:
-        return state.has("Progressive Trickster", world.player, count=2)
-    else:
-        return True
+        return state.has(f"Progressive {style}", world.player, count=level)
+    return True
+
+
+def has_skill(state, world, weapon: str, skill: str, level: int = 1) -> bool:
+    # The weapon itself is always needed. With skills not randomized, the skill can be bought.
+    if not state.has(weapon, world.player):
+        return False
+    if world.options.randomize_skills:
+        return state.has(f"{weapon} - {skill}", world.player, count=level)
+    return True
+
+
+def dt_rune_count(state, world) -> int:
+    # Purple Orb Mode on: runes = purple orbs. Off: the Devil Trigger item gives 3 runes, +1 per purple orb.
+    runes = state.count("Purple Orb", world.player)
+    if not world.options.purple_orb_mode and state.has("Devil Trigger", world.player):
+        runes += 3
+    return runes
+
+
+def can_dt_fly(state, world) -> bool:
+    # Reach high places by flying in Devil Trigger: DT with Rebellion, or DT with Nevan's Air Raid
+    return has_devil_trigger(state, world) and (state.has("Rebellion", world.player) or has_air_raid(state, world))
 
 
 def has_devil_trigger(state, world) -> bool:
@@ -77,8 +103,9 @@ def add_generic_rules(world):
     add_rule(world.multiworld.get_location("Mission #5 - Combat Adjudicator #2", world.player),
              lambda state: state.has("Soul of Steel", world.player))
 
+    # Above the goddess statue: Air Hike + Sky Star, or fly up in DT
     add_rule(world.multiworld.get_location("Mission #9 - Blue Orb Fragment #5", world.player),
-             lambda state: has_air_hike(state, world) and has_sky_star(state, world))
+             lambda state: (has_air_hike(state, world) and has_sky_star(state, world)) or can_dt_fly(state, world))
 
     # Extra insurance, even if it may be un-needed. Both locations are in the same room.
     add_rule(world.multiworld.get_location("Mission #14 - Combat Adjudicator #9", world.player),
@@ -139,10 +166,24 @@ def add_generic_rules(world):
     add_rule(world.multiworld.get_location("Secret Mission #2", world.player),
              lambda state: state.has("Soul of Steel", world.player))
 
-    # Flight of the Demon, needs air raid and DT (Needs Stone Mask to raise bridge leading to it)
+    # Flight of the Demon: fly in DT with Rebellion or Air Raid Nevan (Needs Stone Mask to raise bridge leading to it)
     add_rule(world.multiworld.get_location("Secret Mission #6", world.player),
-             lambda state: has_air_raid(state, world) and
-                           has_devil_trigger(state, world) and state.has("Stone Mask", world.player))
+             lambda state: state.has("Stone Mask", world.player) and can_dt_fly(state, world))
+
+    # SM7: Stinger Lv2, or Ebony & Ivory, or DT with at least 8 runes
+    add_rule(world.multiworld.get_location("Secret Mission #7", world.player),
+             lambda state: has_skill(state, world, "Rebellion", "Progressive Stinger", 2)
+                           or state.has("Ebony & Ivory", world.player)
+                           or (has_devil_trigger(state, world) and dt_rune_count(state, world) >= 8))
+
+    # SM9: Spiral with Royalguard, or Ebony & Ivory with Gunslinger
+    add_rule(world.multiworld.get_location("Secret Mission #9", world.player),
+             lambda state: (state.has("Spiral", world.player) and has_style(state, world, "Royalguard"))
+                           or (state.has("Ebony & Ivory", world.player) and has_style(state, world, "Gunslinger")))
+
+    # SM12: Air Hike + Sky Star, or fly up in DT
+    add_rule(world.multiworld.get_location("Secret Mission #12", world.player),
+             lambda state: (has_air_hike(state, world) and has_sky_star(state, world)) or can_dt_fly(state, world))
 
 
 # What location needs to be reached/items are needed to finish a mission
@@ -256,6 +297,11 @@ def set_dmc3_rules(dmc3_world) -> None:
         add_rule(location,
                  lambda state, wep=weapon:
                  state.has(wep, dmc3_world.player))
+
+    # Backtracking routes: must run after every other location rule is set
+    if dmc3_world.options.out_of_mission_checks:
+        from .OutOfMission import set_out_of_mission_rules
+        set_out_of_mission_rules(dmc3_world)
 
     dmc3_world.multiworld.completion_condition[dmc3_world.player] = lambda state: state.has("Complete",
                                                                                             dmc3_world.player)

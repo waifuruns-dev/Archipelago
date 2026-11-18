@@ -372,6 +372,16 @@ class AutoSkillHints(AutoWeaponHint):
     display_name = "Auto Skill Hints"
 
 
+class OutOfMissionChecks(Toggle):
+    """
+    Adds backtracking routes to logic: some checks can also be collected from a later mission
+    that reaches their rooms (e.g. many Mission 9-17 checks from Mission 16 or 19).
+
+    You may be expected to collect a check from a different mission than the one it belongs to.
+    """
+    display_name = "Out of Mission Checks"
+
+
 @dataclass
 class DMC3Options(PerGameCommonOptions):
     random_adjudicators: RandomizeAdjudicators
@@ -403,6 +413,7 @@ class DMC3Options(PerGameCommonOptions):
     auto_orb_hints: AutoOrbHints
     auto_gun_hints: AutoGunHints
     # auto_skill_hints: AutoSkillHints
+    out_of_mission_checks: OutOfMissionChecks
 
 
 option_groups = [
@@ -422,7 +433,8 @@ option_groups = [
         SSRankDifficultyCheck,
         MissionShuffle,
         MissionOrderWeights,
-        MissionOrderGroup
+        MissionOrderGroup,
+        OutOfMissionChecks
     ]),
     OptionGroup("Item & Location Options", [
         DMC3ExcludeLocations,

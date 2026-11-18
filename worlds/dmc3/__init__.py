@@ -305,6 +305,11 @@ class DevilMayCry3World(World):
                     self.multiworld.regions.append(secret_region)
                     secret_region.add_exits(["Menu", mission_name])
 
+        # Backtracking routes (each such location gets its own region with one entrance per route)
+        if self.options.out_of_mission_checks:
+            from .OutOfMission import create_out_of_mission_regions
+            create_out_of_mission_regions(self)
+
     def create_item(self, name: str) -> DMC3Item:
         item = DMC3Item(name, (dmc3_items | combined_upgrades | styles)[name].classification,
                         self.item_name_to_id[name],
@@ -403,6 +408,7 @@ class DevilMayCry3World(World):
                                          "initially_unlocked_difficulties", "enabled_ss_rank", "check_ss_difficulty",
                                          "shop_orb_checks", "shop_gun_checks", #"shop_skill_checks",
                                          "auto_orb_hints", "auto_gun_hints", #"auto_skill_hints",
+                                         "out_of_mission_checks",
                                                                               "death_link", toggles_as_bools=True))
         return data
 
