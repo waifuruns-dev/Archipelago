@@ -1,5 +1,6 @@
 from BaseClasses import MultiWorld
 from ..dmc3 import adjudicators
+from . import Locations
 from ..generic.Rules import add_rule, add_item_rule
 
 
@@ -245,6 +246,23 @@ def add_gun_shop_rules(world):
                  lambda state, gun_name=gun: state.has(gun_name, world.player))
 
 
+# Shop checks cost red orbs, which logic doesn't track, so early on they're effectively out of reach.
+# With a mission order (Standard / Random Order goals), shop checks only count as reachable once this
+# many missions of the order are completed, so nothing needed to get through them can be in the shop.
+SHOP_AFTER_MISSIONS = 3
+
+
+def add_shop_balancing_rules(world):
+    last_early_mission = world.dmc3_mission_order[SHOP_AFTER_MISSIONS - 1]
+    shop_location_names = {name for name in Locations.default_shop_locations} | \
+                          {name for name in Locations.gun_level_purchases}
+    for location in world.multiworld.get_locations(world.player):
+        if location.name in shop_location_names:
+            add_rule(location,
+                     lambda state, mission=last_early_mission:
+                     state.can_reach_location(f"Mission #{mission} Complete", world.player))
+
+
 def set_dmc3_rules(dmc3_world) -> None:
     if dmc3_world.options.goal.value != 1:
         add_mission_order_rules(dmc3_world)
@@ -252,6 +270,9 @@ def set_dmc3_rules(dmc3_world) -> None:
     add_mission_complete_rules(dmc3_world)
     if dmc3_world.options.shop_gun_checks:
         add_gun_shop_rules(dmc3_world)
+    # Not used with the All goal: every mission is open from the start, so there's no "first" missions
+    if dmc3_world.options.goal.value != dmc3_world.options.goal.option_all:
+        add_shop_balancing_rules(dmc3_world)
 
     # For allowing SS Checks to have useful or filler
     if dmc3_world.options.enabled_ss_rank and dmc3_world.options.useful_ss_checks:
