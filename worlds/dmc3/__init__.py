@@ -209,6 +209,11 @@ class DevilMayCry3World(World):
                 case self.options.mission_shuffle.option_weighted:
                     self.weighted_mission_order()
 
+            # Nothing in Mission 5 is reachable without the Astronomical Board (normally from Mission 4),
+            # so it can't be the first mission: swap it with the second one
+            if self.dmc3_mission_order[0] == 5:
+                self.dmc3_mission_order[0], self.dmc3_mission_order[1] = \
+                    self.dmc3_mission_order[1], self.dmc3_mission_order[0]
             print(f"Mission Order: {self.dmc3_mission_order}")
         # If a style isn't already in the start inventory, pick one at random
         if self.options.randomize_styles:
