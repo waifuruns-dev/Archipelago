@@ -1,4 +1,4 @@
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from typing import Dict, Any, TextIO, ClassVar, Optional
 
 import settings
@@ -107,7 +107,10 @@ class DevilMayCry3World(World):
     def __init__(self, world, player: int):
         super(DevilMayCry3World, self).__init__(world, player)
         self.dmc3_mission_order = [i for i in range(1, 21)]
-        self.adjudicator_generated_values = adjudicator_info.copy()
+        # Each player needs their own Adjudicator objects: a shallow copy shares them with the
+        # module-level adjudicator_info, so randomizing one player's adjudicators changed every
+        # player's (and later generations' in the same process)
+        self.adjudicator_generated_values = {key: replace(info) for key, info in adjudicator_info.items()}
 
     def grouped_mission_order(self):
         size = -(-20 // self.options.mission_group.value)
