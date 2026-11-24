@@ -264,6 +264,11 @@ class DevilMayCry3World(World):
                 m_loc: self.location_name_to_id[m_loc]
                 for m_loc in [loc for loc in gun_level_purchases]
             }, DMC3Location)
+        if self.options.shop_skill_checks and self.options.randomize_skills:
+            menu_region.add_locations({
+                m_loc: self.location_name_to_id[m_loc]
+                for m_loc in [loc for loc in weapon_skill_purchases]
+            }, DMC3Location)
         self.multiworld.regions.append(menu_region)
         # Setup missions+secret missions
         for mission_idx in range(20):
@@ -414,7 +419,7 @@ class DevilMayCry3World(World):
                                          "purple_orb_mode",
                                          "devil_trigger_mode", "goal", "mission_clear_rank", "mission_clear_difficulty",
                                          "initially_unlocked_difficulties", "enabled_ss_rank", "check_ss_difficulty",
-                                         "shop_orb_checks", "shop_gun_checks", #"shop_skill_checks",
+                                         "shop_orb_checks", "shop_gun_checks", "shop_skill_checks",
                                          "auto_orb_hints", "auto_gun_hints", #"auto_skill_hints",
                                          "out_of_mission_checks",
                                                                               "death_link", toggles_as_bools=True))

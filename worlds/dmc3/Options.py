@@ -315,13 +315,11 @@ class ShopGunChecks(Toggle):
 
 class ShopSkillChecks(Toggle):
     """
-    Not yet Implemented, this will do nothing
+    Buying weapon skills in the Divinity Statue shop sends out checks (one per skill level)
 
-    Purchasing new weapon skills will send out checks
-
-    You will need the specific weapon for the checks
+    You will need the specific weapon for its checks. Only used when Randomize Skills is on
     """
-    display_name = "NYI Skill Store Checks"
+    display_name = "Skill Store Checks"
 
 
 class AutoOrbHints(Choice):
@@ -409,7 +407,7 @@ class DMC3Options(PerGameCommonOptions):
     exclude_locations: DMC3ExcludeLocations
     shop_orb_checks: ShopOrbChecks
     shop_gun_checks: ShopGunChecks
-    # shop_skill_checks: ShopSkillChecks
+    shop_skill_checks: ShopSkillChecks
     auto_orb_hints: AutoOrbHints
     auto_gun_hints: AutoGunHints
     # auto_skill_hints: AutoSkillHints
@@ -422,7 +420,7 @@ option_groups = [
         AutoOrbHints,
         ShopGunChecks,
         AutoGunHints,
-        # ShopSkillChecks,
+        ShopSkillChecks,
         # AutoSkillHints
     ]),
     OptionGroup("Mission Options", [

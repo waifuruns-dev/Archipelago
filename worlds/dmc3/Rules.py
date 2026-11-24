@@ -255,12 +255,24 @@ SHOP_AFTER_MISSIONS = 3
 def add_shop_balancing_rules(world):
     last_early_mission = world.dmc3_mission_order[SHOP_AFTER_MISSIONS - 1]
     shop_location_names = {name for name in Locations.default_shop_locations} | \
-                          {name for name in Locations.gun_level_purchases}
+                          {name for name in Locations.gun_level_purchases} | \
+                          {name for name in Locations.weapon_skill_purchases}
     for location in world.multiworld.get_locations(world.player):
         if location.name in shop_location_names:
             add_rule(location,
                      lambda state, mission=last_early_mission:
                      state.can_reach_location(f"Mission #{mission} Complete", world.player))
+
+
+def add_skill_shop_rules(world):
+    """Skill purchases need their weapon, and a level 2 purchase needs the level 1 purchase first."""
+    player = world.player
+    for name, (weapon, previous) in Locations.SKILL_PURCHASE_NAMES.items():
+        location = world.multiworld.get_location(f"Purchase {name}", player)
+        add_rule(location, lambda state, w=weapon: state.has(w, player))
+        if previous:
+            add_rule(location,
+                     lambda state, p=f"Purchase {previous}": state.can_reach_location(p, player))
 
 
 def set_dmc3_rules(dmc3_world) -> None:
@@ -270,6 +282,8 @@ def set_dmc3_rules(dmc3_world) -> None:
     add_mission_complete_rules(dmc3_world)
     if dmc3_world.options.shop_gun_checks:
         add_gun_shop_rules(dmc3_world)
+    if dmc3_world.options.shop_skill_checks and dmc3_world.options.randomize_skills:
+        add_skill_shop_rules(dmc3_world)
     # Not used with the All goal: every mission is open from the start, so there's no "first" missions
     if dmc3_world.options.goal.value != dmc3_world.options.goal.option_all:
         add_shop_balancing_rules(dmc3_world)

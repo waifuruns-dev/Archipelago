@@ -76,9 +76,33 @@ gun_level_purchases: dict[str, BaseLocationData] = (
     {f"Purchase Kalina Ann Level {i}": BaseLocationData() for i in range(2, 4)}
 )
 
-weapon_skill_purchases: dict[str, BaseLocationData] = ({
-    # TODO
-})
+# Skills bought in the Divinity Statue shop (names match the mod's skill_manager)
+SKILL_PURCHASE_NAMES: dict[str, tuple[str, str | None]] = {
+    # name: (weapon needed, purchase needed first)
+    "Rebellion - Stinger Level 1": ("Rebellion", None),
+    "Rebellion - Stinger Level 2": ("Rebellion", "Rebellion - Stinger Level 1"),
+    "Rebellion - Drive": ("Rebellion", None),
+    "Rebellion - Air Hike": ("Rebellion", None),
+    "Cerberus - Revolver Level 2": ("Cerberus", None),
+    "Cerberus - Windmill": ("Cerberus", None),
+    "Agni and Rudra - Jet Stream Level 2": ("Agni and Rudra", None),
+    "Agni and Rudra - Jet Stream Level 3": ("Agni and Rudra", "Agni and Rudra - Jet Stream Level 2"),
+    "Agni and Rudra - Whirlwind": ("Agni and Rudra", None),
+    "Agni and Rudra - Air Hike": ("Agni and Rudra", None),
+    "Nevan - Reverb Shock": ("Nevan", None),
+    "Nevan - Reverb Shock Level 2": ("Nevan", "Nevan - Reverb Shock"),
+    "Nevan - Bat Rift Level 2": ("Nevan", None),
+    "Nevan - Air Raid": ("Nevan", None),
+    "Nevan - Volume Up": ("Nevan", None),
+    "Beowulf - Straight Level 2": ("Beowulf", None),
+    "Beowulf - Beast Uppercut": ("Beowulf", None),
+    "Beowulf - Rising Dragon": ("Beowulf", "Beowulf - Beast Uppercut"),
+    "Beowulf - Air Hike": ("Beowulf", None),
+}
+
+weapon_skill_purchases: dict[str, BaseLocationData] = (
+    {f"Purchase {name}": BaseLocationData() for name in SKILL_PURCHASE_NAMES}
+)
 
 ss_rank_locations: dict[str, BaseLocationData] = (
     {"Mission #{} SS Rank".format(mission_numb): BaseLocationData(mission_number=mission_numb, room_number=0, default_item=0x00)
