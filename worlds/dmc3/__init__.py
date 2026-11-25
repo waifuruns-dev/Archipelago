@@ -419,7 +419,7 @@ class DevilMayCry3World(World):
                                          "purple_orb_mode",
                                          "devil_trigger_mode", "goal", "mission_clear_rank", "mission_clear_difficulty",
                                          "initially_unlocked_difficulties", "enabled_ss_rank", "check_ss_difficulty",
-                                         "shop_orb_checks", "shop_gun_checks", "shop_skill_checks",
+                                         "shop_orb_checks", "shop_gun_checks", "shop_skill_checks", "shop_unlock_missions",
                                          "auto_orb_hints", "auto_gun_hints", #"auto_skill_hints",
                                          "out_of_mission_checks",
                                                                               "death_link", toggles_as_bools=True))

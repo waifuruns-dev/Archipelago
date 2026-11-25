@@ -322,6 +322,20 @@ class ShopSkillChecks(Toggle):
     display_name = "Skill Store Checks"
 
 
+class ShopUnlockMissions(Range):
+    """
+    Shop checks (orb, gun and skill purchases) only count as reachable in logic after this many
+    missions of the mission order are completed, since logic doesn't track Red Orbs.
+    Items you need to get through those first missions won't be placed in the shop.
+
+    0 turns this off. Not used with the "All" goal (every mission is open from the start).
+    """
+    display_name = "Shop Unlock After X Missions"
+    range_start = 0
+    range_end = 20
+    default = 3
+
+
 class AutoOrbHints(Choice):
     """
     What types of hints should be automatically created
@@ -408,6 +422,7 @@ class DMC3Options(PerGameCommonOptions):
     shop_orb_checks: ShopOrbChecks
     shop_gun_checks: ShopGunChecks
     shop_skill_checks: ShopSkillChecks
+    shop_unlock_missions: ShopUnlockMissions
     auto_orb_hints: AutoOrbHints
     auto_gun_hints: AutoGunHints
     # auto_skill_hints: AutoSkillHints
@@ -421,6 +436,7 @@ option_groups = [
         ShopGunChecks,
         AutoGunHints,
         ShopSkillChecks,
+        ShopUnlockMissions,
         # AutoSkillHints
     ]),
     OptionGroup("Mission Options", [

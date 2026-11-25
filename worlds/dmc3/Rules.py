@@ -247,13 +247,14 @@ def add_gun_shop_rules(world):
 
 
 # Shop checks cost red orbs, which logic doesn't track, so early on they're effectively out of reach.
-# With a mission order (Standard / Random Order goals), shop checks only count as reachable once this
-# many missions of the order are completed, so nothing needed to get through them can be in the shop.
-SHOP_AFTER_MISSIONS = 3
-
-
+# With a mission order (Standard / Random Order goals), shop checks only count as reachable once the
+# number of missions set by the Shop Unlock After X Missions option are completed, so nothing needed
+# to get through them can be in the shop.
 def add_shop_balancing_rules(world):
-    last_early_mission = world.dmc3_mission_order[SHOP_AFTER_MISSIONS - 1]
+    missions = world.options.shop_unlock_missions.value
+    if missions <= 0:
+        return
+    last_early_mission = world.dmc3_mission_order[min(missions, len(world.dmc3_mission_order)) - 1]
     shop_location_names = {name for name in Locations.default_shop_locations} | \
                           {name for name in Locations.gun_level_purchases} | \
                           {name for name in Locations.weapon_skill_purchases}
