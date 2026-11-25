@@ -322,6 +322,24 @@ class ShopSkillChecks(Toggle):
     display_name = "Skill Store Checks"
 
 
+class EnemyRandomizer(Choice):
+    """Randomize the normal enemies each room spawns. Uses your seed, so the same seed always has the same enemies.
+
+    **Per Type**: each kind of enemy in a room becomes one other kind (all the Hell Prides in a room become Arachnes, say)
+
+    **Mixed**: every enemy is picked separately
+
+    Only the Seven Hells, Abyss, Envy, Arachne and The Fallen are swapped. Bosses, puzzle enemies (Damned Chessmen,
+    Enigma, Soul Eater and others) and enemies that break when spawned elsewhere stay as they are.
+    For now enemies are only swapped for others the mission already has loaded. Doesn't change logic.
+    """
+    display_name = "Enemy Randomizer"
+    option_off = 0
+    option_per_type = 1
+    option_mixed = 2
+    default = 0
+
+
 class ShopUnlockMissions(Range):
     """
     Shop checks (orb, gun and skill purchases) only count as reachable in logic after this many
@@ -427,6 +445,7 @@ class DMC3Options(PerGameCommonOptions):
     auto_gun_hints: AutoGunHints
     # auto_skill_hints: AutoSkillHints
     out_of_mission_checks: OutOfMissionChecks
+    enemy_randomizer: EnemyRandomizer
 
 
 option_groups = [
@@ -449,6 +468,9 @@ option_groups = [
         MissionOrderWeights,
         MissionOrderGroup,
         OutOfMissionChecks
+    ]),
+    OptionGroup("Enemy Options", [
+        EnemyRandomizer,
     ]),
     OptionGroup("Item & Location Options", [
         DMC3ExcludeLocations,

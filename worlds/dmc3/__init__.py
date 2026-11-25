@@ -413,6 +413,9 @@ class DevilMayCry3World(World):
             data.update({'adjudicators': {key: asdict(adj) for key, adj in self.adjudicator_generated_values.items()}})
         if self.options.goal == self.options.goal.option_random_order:
             data.update({'mission_order': self.dmc3_mission_order})
+        if self.options.enemy_randomizer:
+            # Seeds the mod's enemy picks; drawn from this world's random so it follows the seed
+            data.update({'enemizer_seed': self.random.getrandbits(52)})
             # TODO Maybe dont disable those this version and instead disable for 0.6.0?
         data.update(self.options.as_dict(#"start_melee", "start_second_melee", "start_gun", "start_second_gun",
                                          "randomize_skills", "randomize_gun_levels", "randomize_styles",
@@ -421,7 +424,7 @@ class DevilMayCry3World(World):
                                          "initially_unlocked_difficulties", "enabled_ss_rank", "check_ss_difficulty",
                                          "shop_orb_checks", "shop_gun_checks", "shop_skill_checks", "shop_unlock_missions",
                                          "auto_orb_hints", "auto_gun_hints", #"auto_skill_hints",
-                                         "out_of_mission_checks",
+                                         "out_of_mission_checks", "enemy_randomizer",
                                                                               "death_link", toggles_as_bools=True))
         return data
 
