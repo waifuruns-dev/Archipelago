@@ -9,8 +9,9 @@ weapon, a secret mission's challenge requirements, moves needed at the spot itse
 the location.
 
 Routes were tested in game on 2026-11-17 (Explore seed, everything unlocked). Weapon
-pickups that only appear when you don't own the weapon (Artemis' Mission 16 spawn) are not
-included.
+pickups that only appear when you don't own the weapon are otherwise not
+included, except Artemis and Spiral: the mod makes their later spawns appear while their checks
+aren't sent (Spiral in Missions 14, 16 and 19; Artemis in Missions 16 and 19).
 """
 from typing import Callable, Optional
 
@@ -45,12 +46,17 @@ OUT_OF_MISSION_ROUTES: dict[str, tuple[int, Rule, dict[int, Rule]]] = {
     # Mission 6
     "Mission #6 - Combat Adjudicator #3": (
         6, lambda state, world: state.has_group_unique("essences", world.player, 2), {7: None}),
+    # Mission 6 (Artemis's statue needs all 3 essences in its own mission)
+    "Mission #6 - Artemis": (
+        6, lambda state, world: state.has_group_unique("essences", world.player, 3), {16: None, 19: SAMSARA}),
     # Mission 9
     "Mission #9 - Blue Orb Fragment #5": (9, None, {10: None}),
     "Mission #9 - Devil Star": (9, None, {10: None, 14: None, 16: None, 19: SAMSARA}),
     "Secret Mission #5": (9, None, {10: None, 14: None, 16: None, 19: SAMSARA}),
     "Mission #9 - Combat Adjudicator #6": (9, None, {10: None}),
-    "Mission #9 - Spiral": (9, None, {10: None}),
+    # Spiral's Mission 14 spawn is past that mission's Combat Adjudicator
+    "Mission #9 - Spiral": (
+        9, None, {10: None, 14: _reach("Mission #14 - Combat Adjudicator #9"), 16: None, 19: SAMSARA}),
     # Mission 11
     "Mission #11 - Devil Star": (11, None, {12: None, 14: None, 16: None, 19: SAMSARA}),
     "Mission #11 - Holy Water": (11, None, {12: None, 14: None, 16: None, 19: SAMSARA}),
@@ -152,7 +158,7 @@ def set_out_of_mission_rules(world) -> None:
     # Mission 14's checks past the adjudicator depend on the adjudicator's (now separate) region
     adjudicator_area = multiworld.get_region(_area_name("Mission #14 - Combat Adjudicator #9"), player)
     for location_name in ("Mission #14 - Vital Star S", "Mission #14 - Vital Star S #2",
-                          "Mission #14 - Blue Orb Fragment #7"):
+                          "Mission #14 - Blue Orb Fragment #7", "Mission #9 - Spiral"):
         multiworld.register_indirect_condition(
             adjudicator_area, multiworld.get_entrance(_entrance_name(14, location_name), player))
     # "Mission #14 Complete" also needs the adjudicator, and the mission order entrances out of
